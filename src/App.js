@@ -15,7 +15,7 @@ function App() {
   const { colorMode, toggleColorMode } = useColorMode();
 
   const initialTodos = [
-    { id: 1, body: "Delete this todo and more to get started" },
+    { id: 1, body: "Delete this todo and add more to get started" },
   ];
 
   const [todos, setTodos] = useState(
