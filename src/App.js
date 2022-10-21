@@ -1,23 +1,65 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  Heading,
+  VStack,
+  IconButton,
+  ColorModeScript,
+  useColorMode,
+} from "@chakra-ui/react";
+import { FaSun, FaMoon } from "react-icons/fa";
+import AddTodo from "./components/AddTodo";
+import TodoList from "./components/TodoList";
+
+import { useState, useEffect } from "react";
 
 function App() {
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  const initialTodos = [
+    { id: 1, body: "Delete these todos and more to get started" },
+  ];
+
+  const [todos, setTodos] = useState(
+    localStorage.getItem("todos")
+      ? JSON.parse(localStorage.getItem("todos"))
+      : initialTodos
+  );
+
+  function addTodo(todo) {
+    setTodos([...todos, todo]);
+  }
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  function deleteTodo(id) {
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div>
+      <ColorModeScript initialColorMode="light" />
+      <VStack p={10}>
+        <IconButton
+          icon={colorMode === "light" ? <FaSun /> : <FaMoon />}
+          isRound={true}
+          size="lg"
+          alignSelf="flex-end"
+          onClick={toggleColorMode}
+        />
+        <Heading
+          pb="10"
+          fontWeight="extrabold"
+          bgGradient="linear(to-r, pink.500, pink.300, blue.500)"
+          size="2xl"
+          bgClip="text"
         >
-          Learn React
-        </a>
-      </header>
+          2-Do-ist
+        </Heading>
+        <TodoList todos={todos} deleteTodo={deleteTodo} />
+        <AddTodo addTodo={addTodo} />
+      </VStack>
     </div>
   );
 }
